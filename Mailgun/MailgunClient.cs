@@ -18,16 +18,14 @@ namespace Mailgun
     public class MailgunClient : IMailgunClient
     {
         private readonly string _apiBaseUrl;
-        private readonly string _domain;
         private readonly string _privateApiKey;
         private readonly string _publicApiKey;
         private readonly JsonSerializerSettings _jsonSettings;
 
 
-        public MailgunClient(string apiBaseUrl, string domain, string privateApiKey, string publicApiKey)
+        public MailgunClient(string apiBaseUrl, string privateApiKey, string publicApiKey)
         {
             _apiBaseUrl = apiBaseUrl;
-            _domain = domain;
             _publicApiKey = publicApiKey;
             _privateApiKey = privateApiKey;
 
@@ -196,6 +194,11 @@ namespace Mailgun
                 throw new ArgumentException("message cannot be null", "message");
             }
 
+            if (String.IsNullOrEmpty(message.Domain))
+            {
+                throw new ArgumentException("Message must have a domain", "message");
+            }
+
             if (message.From == null)
             {
                 throw new ArgumentException("Message must have a from address", "message");
@@ -215,7 +218,7 @@ namespace Mailgun
             {
                 using (var content = message.ToMultipartForm())
                 {
-                    using (var response = await client.PostAsync(_domain + "/messages", content))
+                    using (var response = await client.PostAsync(message.Domain + "/messages", content))
                     {
                         var statusException = await checkStatusCode(response);
                         if (statusException != null)

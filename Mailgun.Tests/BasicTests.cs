@@ -11,6 +11,7 @@ namespace Mailgun.Tests
     public class BasicTests
     {
         private IMailgunClient _client;
+        private string _domain;
         private string _testRecipient;
         private string _testSender;
         private string _testDomain;
@@ -20,6 +21,7 @@ namespace Mailgun.Tests
         public void Initialize()
         {
             _client = ObjectFactory.GetMailgunClient();
+            _domain = ConfigurationManager.AppSettings["Domain"];
             _testRecipient = ConfigurationManager.AppSettings["TestRecipient"];
             _testSender = ConfigurationManager.AppSettings["TestSender"];
             _testDomain = ConfigurationManager.AppSettings["TestDomain"];
@@ -56,7 +58,7 @@ namespace Mailgun.Tests
         [TestMethod]
         public async Task TestSendMessage()
         {
-            var message = new MailgunMessage()
+            var message = new MailgunMessage(_domain)
             {
                 From = new MailgunAddress(_testSender, "Unit Testing"),
                 Text = "Hello World",
@@ -76,7 +78,7 @@ namespace Mailgun.Tests
         [TestMethod]
         public async Task TestSendMessageAttachment()
         {
-            var message = new MailgunMessage()
+            var message = new MailgunMessage(_domain)
             {
                 From = new MailgunAddress(_testSender, "Unit Testing"),
                 Text = "Hello World",
@@ -97,7 +99,7 @@ namespace Mailgun.Tests
         [TestMethod]
         public async Task TestSendMessageByteAttachment()
         {
-            var message = new MailgunMessage()
+            var message = new MailgunMessage(_domain)
             {
                 From = new MailgunAddress(_testSender, "Unit Testing"),
                 Text = "Hello World",

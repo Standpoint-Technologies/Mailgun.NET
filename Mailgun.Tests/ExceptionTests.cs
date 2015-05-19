@@ -10,6 +10,7 @@ namespace Mailgun.Tests
     public class ExceptionTests
     {
         private IMailgunClient _client;
+        private string _domain;
         private string _testRecipient;
         private string _testSender;
 
@@ -17,6 +18,7 @@ namespace Mailgun.Tests
         public void Initialize()
         {
             _client = ObjectFactory.GetMailgunClient();
+            _domain = ConfigurationManager.AppSettings["Domain"];
             _testRecipient = ConfigurationManager.AppSettings["TestRecipient"];
             _testSender = ConfigurationManager.AppSettings["TestSender"];
         }
@@ -31,7 +33,7 @@ namespace Mailgun.Tests
         [ExpectedException(typeof(ArgumentException))]
         public async Task TestNoFrom()
         {
-            var message = new MailgunMessage()
+            var message = new MailgunMessage(_domain)
             {
                 Text = "Hello World",
                 Subject = "Test",
@@ -47,7 +49,7 @@ namespace Mailgun.Tests
         [ExpectedException(typeof(ArgumentException))]
         public async Task TestLargeDeliveryTime()
         {
-            var message = new MailgunMessage()
+            var message = new MailgunMessage(_domain)
             {
                 From = new MailgunAddress(_testSender, "Unit Testing"),
                 Text = "Hello World",
@@ -65,7 +67,7 @@ namespace Mailgun.Tests
         [ExpectedException(typeof(ArgumentException))]
         public async Task TestMaxRecipients()
         {
-            var message = new MailgunMessage()
+            var message = new MailgunMessage(_domain)
             {
                 From = new MailgunAddress(_testSender, "Unit Testing"),
                 Text = "Hello World",

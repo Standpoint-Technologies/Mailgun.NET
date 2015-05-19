@@ -6,12 +6,12 @@ namespace Mailgun.Tests
     {
         public static IMailgunClient GetMailgunClient()
         {
-            return new MailgunClient(ConfigurationManager.AppSettings["ApiBaseUrl"], ConfigurationManager.AppSettings["Domain"], ConfigurationManager.AppSettings["PrivateApiKey"], ConfigurationManager.AppSettings["PublicApiKey"]);
+            return new MailgunClient(ConfigurationManager.AppSettings["ApiBaseUrl"], ConfigurationManager.AppSettings["PrivateApiKey"], ConfigurationManager.AppSettings["PublicApiKey"]);
         }
 
         public static IMailgunClient GetBadKeyMailgunClient()
         {
-            return new MailgunClient(ConfigurationManager.AppSettings["ApiBaseUrl"], ConfigurationManager.AppSettings["Domain"], ConfigurationManager.AppSettings["PrivateApiKey"] + "1", ConfigurationManager.AppSettings["PublicApiKey"] + "1");
+            return new MailgunClient(ConfigurationManager.AppSettings["ApiBaseUrl"], ConfigurationManager.AppSettings["PrivateApiKey"] + "1", ConfigurationManager.AppSettings["PublicApiKey"] + "1");
         }
     }
 }

@@ -10,6 +10,8 @@ namespace Mailgun
 {
     public class MailgunMessage
     {
+        public string Domain { get; set; }
+
         public MailgunAddress From { get; set; }
 
         public string Subject { get; set; }
@@ -47,8 +49,9 @@ namespace Mailgun
         public ICollection<MailgunAttachment> Attachments { get; set; }
 
 
-        public MailgunMessage()
+        public MailgunMessage(string domain)
         {
+            Domain = domain;
             To = new List<MailgunAddress>();
             CC = new List<MailgunAddress>();
             BCC = new List<MailgunAddress>();
