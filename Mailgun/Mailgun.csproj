@@ -84,6 +84,11 @@
     <Compile Include="MailgunSentResponse.cs" />
     <Compile Include="MailgunSpamAction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WebhookEvents\BounceEvent.cs" />
+    <Compile Include="WebhookEvents\DeliveryEvent.cs" />
+    <Compile Include="WebhookEvents\FailureEvent.cs" />
+    <Compile Include="WebhookEvents\SpamComplaintEvent.cs" />
+    <Compile Include="WebhookEvents\WebhookEventBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Mailgun.NET.nuspec" />
