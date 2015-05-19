@@ -5,7 +5,7 @@
         <authors>Tyler Benfield</authors>
         <owners>Standpoint Technologies</owners>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>.NET wrapper for Mailgun written in C#</description>
+        <description>Mailgun API wrapper in .NET written in C#</description>
         <language>en-US</language>
         <tags>Mailgun</tags>
         <dependencies>
