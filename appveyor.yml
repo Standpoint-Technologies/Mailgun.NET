@@ -3,8 +3,8 @@ branches:
   only:
   - master
 configuration: Release
-build:
-  verbosity: minimal
+build_script:
+- nuget restore
 test: off
 notifications:
 - provider: Email
