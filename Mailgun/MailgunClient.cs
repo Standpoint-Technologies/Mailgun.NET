@@ -213,19 +213,19 @@ namespace Mailgun
 
             using (var client = createHttpClient())
             {
-                var v = message.ToKeyValuePair();
-
-                var content = new FormUrlEncodedContent(v);
-                using (var response = await client.PostAsync(_domain + "/messages", content))
+                using (var content = message.ToMultipartForm())
                 {
-                    var statusException = await checkStatusCode(response);
-                    if (statusException != null)
+                    using (var response = await client.PostAsync(_domain + "/messages", content))
                     {
-                        throw statusException;
-                    }
+                        var statusException = await checkStatusCode(response);
+                        if (statusException != null)
+                        {
+                            throw statusException;
+                        }
 
-                    var responseBody = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<MailgunSentResponse>(responseBody, _jsonSettings);
+                        var responseBody = await response.Content.ReadAsStringAsync();
+                        return JsonConvert.DeserializeObject<MailgunSentResponse>(responseBody, _jsonSettings);
+                    }
                 }
             }
         }

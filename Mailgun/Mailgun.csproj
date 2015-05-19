@@ -57,6 +57,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attachments\MailgunAttachment.cs" />
+    <Compile Include="Attachments\MailgunByteAttachment.cs" />
     <Compile Include="ClickTrackingOption.cs" />
     <Compile Include="DefaultRecipientVariables.cs" />
     <Compile Include="Exceptions\MailgunBadRequest.cs" />

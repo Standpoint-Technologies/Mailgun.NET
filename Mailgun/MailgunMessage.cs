@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using Mailgun.Attachments;
 using Mailgun.Internal;
 using Newtonsoft.Json;
 
@@ -42,6 +44,8 @@ namespace Mailgun
 
         public IDictionary<string, object> Data { get; set; }
 
+        public ICollection<MailgunAttachment> Attachments { get; set; }
+
 
         public MailgunMessage()
         {
@@ -50,71 +54,91 @@ namespace Mailgun
             BCC = new List<MailgunAddress>();
             Tags = new List<string>();
             CustomHeaders = new Dictionary<string, string>();
+            Attachments = new List<MailgunAttachment>();
         }
 
 
         /// <summary>
-        /// Converts the MailgunMessage into a collection of key-value pairs for serialization.
+        /// Converts the MailgunMessage into a MultipartFormDataContent for sending to Mailgun's API.
         /// </summary>
         /// <returns></returns>
-        internal ICollection<KeyValuePair<string, string>> ToKeyValuePair()
+        internal MultipartFormDataContent ToMultipartForm()
         {
-            var v = new List<KeyValuePair<string, string>>();
+            var v = new MultipartFormDataContent();
 
-            v.Add(new KeyValuePair<string, string>("from", From.ToString()));
-            v.Add(new KeyValuePair<string, string>("subject", Subject));
-            v.Add(new KeyValuePair<string, string>("text", Text));
-            v.Add(new KeyValuePair<string, string>("html", HTML));
-            v.Add(new KeyValuePair<string, string>("o:campaign", Campaign));
+            if (From != null)
+            {
+                v.Add(new StringContent(From.ToString()), "from");
+            }
+
+            if (Subject != null)
+            {
+                v.Add(new StringContent(Subject), "subject");
+            }
+
+            if (Text != null)
+            {
+                v.Add(new StringContent(Text), "text");
+            }
+
+            if (HTML != null)
+            {
+                v.Add(new StringContent(HTML), "html");
+            }
+
+            if (Campaign != null)
+            {
+                v.Add(new StringContent(Campaign), "o:campaign");
+            }
 
             if (TestMode)
             {
-                v.Add(new KeyValuePair<string, string>("o:testmode", "yes"));
+                v.Add(new StringContent("yes"), "o:testmode");
             }
 
             if (Tracking.HasValue)
             {
-                v.Add(new KeyValuePair<string, string>("o:tracking", Tracking.Value ? "yes" : "no"));
+                v.Add(new StringContent(Tracking.Value ? "yes" : "no"), "o:tracking");
             }
 
             if (TrackingClicks.HasValue)
             {
-                v.Add(new KeyValuePair<string, string>("o:tracking-clicks", Utilities.GetEnumStringValue(TrackingClicks.Value)));
+                v.Add(new StringContent(Utilities.GetEnumStringValue(TrackingClicks.Value)), "o:tracking-clicks");
             }
 
 
             if (TrackingOpens.HasValue)
             {
-                v.Add(new KeyValuePair<string, string>("o:tracking-opens", TrackingOpens.Value ? "yes" : "no"));
+                v.Add(new StringContent(TrackingOpens.Value ? "yes" : "no"), "o:tracking-opens");
             }
 
             if (DeliveryTime.HasValue)
             {
-                v.Add(new KeyValuePair<string, string>("o:deliverytime", DeliveryTime.Value.ToUniversalTime().ToString("ddd, dd MMM yyyy hh:mm:ss GMT")));
+                v.Add(new StringContent(DeliveryTime.Value.ToUniversalTime().ToString("ddd, dd MMM yyyy hh:mm:ss GMT")), "o:deliverytime");
             }
 
             if (DKIM.HasValue)
             {
-                v.Add(new KeyValuePair<string, string>("o:dkim", DKIM.Value ? "yes" : "no"));
+                v.Add(new StringContent(DKIM.Value ? "yes" : "no"), "o:dkim");
             }
 
-            addAddressesToKeyValueCollection(v, To, "to");
-            addAddressesToKeyValueCollection(v, CC, "cc");
-            addAddressesToKeyValueCollection(v, BCC, "bcc");
+            addAddressesToFormContent(v, To, "to");
+            addAddressesToFormContent(v, CC, "cc");
+            addAddressesToFormContent(v, BCC, "bcc");
 
             var recipientVariables = Enumerable.Empty<MailgunAddress>().Union(To).Union(CC).Union(BCC).ToDictionary(x => x.EmailAddress, x => x.RecipientVariables);
 
             if (recipientVariables.Any())
             {
                 //var recipientVariables = recipients.ToDictionary(x => x.EmailAddress, x => x.RecipientVariables);
-                v.Add(new KeyValuePair<string, string>("recipient-variables", JsonConvert.SerializeObject(recipientVariables)));
+                v.Add(new StringContent(JsonConvert.SerializeObject(recipientVariables)), "recipient-variables");
             }
 
             if (Tags != null)
             {
                 foreach (var tag in Tags)
                 {
-                    v.Add(new KeyValuePair<string, string>("o:tag", tag));
+                    v.Add(new StringContent(tag), "o:tag");
                 }
             }
 
@@ -122,7 +146,7 @@ namespace Mailgun
             {
                 foreach (var header in CustomHeaders)
                 {
-                    v.Add(new KeyValuePair<string, string>("h:" + header.Key, header.Value));
+                    v.Add(new StringContent(header.Value), "h:" + header.Key);
                 }
             }
 
@@ -130,7 +154,15 @@ namespace Mailgun
             {
                 foreach (var d in Data)
                 {
-                    v.Add(new KeyValuePair<string, string>("v:" + d.Key, JsonConvert.SerializeObject(d.Value)));
+                    v.Add(new StringContent(JsonConvert.SerializeObject(d.Value)), "v:" + d.Key);
+                }
+            }
+
+            if (Attachments != null)
+            {
+                foreach (var a in Attachments)
+                {
+                    v.Add(new StreamContent(a.FileContentStream), "attachment", a.FileName);
                 }
             }
 
@@ -139,18 +171,18 @@ namespace Mailgun
 
 
         /// <summary>
-        /// Adds a collection of addresses to the key-value pair collection under the specified type.
+        /// Adds a collection of addresses to the multi-part form content under the specified type.
         /// </summary>
-        /// <param name="collection"></param>
+        /// <param name="content"></param>
         /// <param name="addresses"></param>
         /// <param name="type"></param>
-        private void addAddressesToKeyValueCollection(ICollection<KeyValuePair<string, string>> collection, ICollection<MailgunAddress> addresses, string type)
+        private void addAddressesToFormContent(MultipartFormDataContent content, ICollection<MailgunAddress> addresses, string type)
         {
             if (addresses != null)
             {
                 foreach (var address in addresses)
                 {
-                    collection.Add(new KeyValuePair<string, string>(type, address.ToString()));
+                    content.Add(new StringContent(address.ToString()), type);
                 }
             }
         }
