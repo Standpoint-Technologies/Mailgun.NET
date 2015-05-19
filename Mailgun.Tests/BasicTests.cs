@@ -56,68 +56,6 @@ namespace Mailgun.Tests
         }
 
         [TestMethod]
-        public async Task TestSendMessage()
-        {
-            var message = new MailgunMessage(_domain)
-            {
-                From = new MailgunAddress(_testSender, "Unit Testing"),
-                Text = "Hello World",
-                Subject = "Test",
-                TestMode = true
-            };
-
-            message.To.Add(new MailgunAddress(_testRecipient, "test recipient"));
-
-            var response = await _client.SendMessageAsync(message);
-
-            Assert.IsNotNull(response);
-            Assert.IsTrue(!String.IsNullOrEmpty(response.ID));
-            Assert.IsTrue(!String.IsNullOrEmpty(response.Message));
-        }
-
-        [TestMethod]
-        public async Task TestSendMessageAttachment()
-        {
-            var message = new MailgunMessage(_domain)
-            {
-                From = new MailgunAddress(_testSender, "Unit Testing"),
-                Text = "Hello World",
-                Subject = "Test",
-                TestMode = true
-            };
-
-            message.To.Add(new MailgunAddress(_testRecipient, "test recipient"));
-            message.Attachments.Add(new MailgunAttachment("test.tiff", System.IO.File.Open("test-image.tiff", System.IO.FileMode.Open)));
-
-            var response = await _client.SendMessageAsync(message);
-
-            Assert.IsNotNull(response);
-            Assert.IsTrue(!String.IsNullOrEmpty(response.ID));
-            Assert.IsTrue(!String.IsNullOrEmpty(response.Message));
-        }
-
-        [TestMethod]
-        public async Task TestSendMessageByteAttachment()
-        {
-            var message = new MailgunMessage(_domain)
-            {
-                From = new MailgunAddress(_testSender, "Unit Testing"),
-                Text = "Hello World",
-                Subject = "Test",
-                TestMode = true
-            };
-
-            message.To.Add(new MailgunAddress(_testRecipient, "test recipient"));
-            message.Attachments.Add(new MailgunByteAttachment("test.tiff", System.IO.File.ReadAllBytes("test-image.tiff")));
-
-            var response = await _client.SendMessageAsync(message);
-
-            Assert.IsNotNull(response);
-            Assert.IsTrue(!String.IsNullOrEmpty(response.ID));
-            Assert.IsTrue(!String.IsNullOrEmpty(response.Message));
-        }
-
-        [TestMethod]
         public async Task TestGetDomain()
         {
             var domain = await _client.GetDomainAsync(_testDomain);

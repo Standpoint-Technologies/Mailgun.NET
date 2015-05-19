@@ -57,6 +57,7 @@ namespace Mailgun
             BCC = new List<MailgunAddress>();
             Tags = new List<string>();
             CustomHeaders = new Dictionary<string, string>();
+            Data = new Dictionary<string, object>();
             Attachments = new List<MailgunAttachment>();
         }
 
@@ -129,11 +130,12 @@ namespace Mailgun
             addAddressesToFormContent(v, CC, "cc");
             addAddressesToFormContent(v, BCC, "bcc");
 
-            var recipientVariables = Enumerable.Empty<MailgunAddress>().Union(To).Union(CC).Union(BCC).ToDictionary(x => x.EmailAddress, x => x.RecipientVariables);
+            var recipientVariables = Enumerable.Empty<MailgunAddress>().Union(To).Union(CC).Union(BCC)
+                .GroupBy(x => x.EmailAddress)
+                .ToDictionary(x => x.Key, x => x.SelectMany(y => y.RecipientVariables));
 
             if (recipientVariables.Any())
             {
-                //var recipientVariables = recipients.ToDictionary(x => x.EmailAddress, x => x.RecipientVariables);
                 v.Add(new StringContent(JsonConvert.SerializeObject(recipientVariables)), "recipient-variables");
             }
 
