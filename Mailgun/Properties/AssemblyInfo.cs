@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Mailgun")]
-[assembly: AssemblyDescription("Mailgun API wrapper for .NET written in C#")]
+[assembly: AssemblyDescription("Unofficial Mailgun API wrapper for .NET written in C#")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Standpoint Technologies")]
 [assembly: AssemblyProduct("Mailgun")]
