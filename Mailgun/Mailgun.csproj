@@ -68,6 +68,8 @@
     <Compile Include="Exceptions\MailgunUnauthorizedException.cs" />
     <Compile Include="IMailgunClient.cs" />
     <Compile Include="Internal\MailgunCollectionWrapper.cs" />
+    <Compile Include="Internal\MailgunWebhookCollection.cs" />
+    <Compile Include="Internal\MailgunWebhookWrapper.cs" />
     <Compile Include="Internal\Utilities.cs" />
     <Compile Include="MailgunAddressParseResponse.cs" />
     <Compile Include="MailgunAddressParts.cs" />
@@ -83,6 +85,8 @@
     <Compile Include="MailgunSendingDnsRecord.cs" />
     <Compile Include="MailgunSentResponse.cs" />
     <Compile Include="MailgunSpamAction.cs" />
+    <Compile Include="MailgunWebhook.cs" />
+    <Compile Include="MailgunWebhookType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebhookEvents\BounceEvent.cs" />
     <Compile Include="WebhookEvents\DeliveryEvent.cs" />

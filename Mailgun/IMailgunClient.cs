@@ -14,11 +14,27 @@ namespace Mailgun
         Task<MailgunDomainDetails> AddDomainAsync(MailgunDomain domain);
 
         /// <summary>
+        /// Adds a new webhook to the domain.
+        /// </summary>
+        /// <param name="domain">The domain to add a webhook to.</param>
+        /// <param name="webhook">The webhook configuration.</param>
+        /// <returns>The created MailgunWebhook object.</returns>
+        Task<MailgunWebhook> AddWebhookAsync(string domain, MailgunWebhook webhook);
+
+        /// <summary>
         /// Deletes a domain.
         /// </summary>
         /// <param name="domain">The domain to delete.</param>
         /// <returns></returns>
         Task DeleteDomainAsync(string domain);
+
+        /// <summary>
+        /// Deletes a webhook from the domain.
+        /// </summary>
+        /// <param name="domain">The domain the webhook is configured for.</param>
+        /// <param name="webhookType">The type of webhook to delete.</param>
+        /// <returns></returns>
+        Task DeleteWebhookAsync(string domain, MailgunWebhookType webhookType);
 
         /// <summary>
         /// Gets a single domain.
@@ -36,6 +52,21 @@ namespace Mailgun
         Task<IEnumerable<MailgunDomain>> GetDomainsAsync(int? limit = null, int? skip = null);
 
         /// <summary>
+        /// Gets the webhook configuration for the specified type on the domain.
+        /// </summary>
+        /// <param name="domain">The domain to retrieve the webhook for.</param>
+        /// <param name="webhookType">The webhook type to retrieve.</param>
+        /// <returns>A MailgunWebhook object with the webhook configuration.</returns>
+        Task<MailgunWebhook> GetWebhookAsync(string domain, MailgunWebhookType webhookType);
+
+        /// <summary>
+        /// Gets all of the webhooks configured for a domain.
+        /// </summary>
+        /// <param name="domain">The domain to retrieve webhooks for.</param>
+        /// <returns>A collection of MailgunWebhook objects containing the configured webhooks.</returns>
+        Task<IEnumerable<MailgunWebhook>> GetWebhooksAsync(string domain);
+
+        /// <summary>
         /// Parses a collection of addresses and returns the result.
         /// </summary>
         /// <param name="addresses">The addresses to parse.</param>
@@ -49,6 +80,14 @@ namespace Mailgun
         /// <param name="message">The message to send.</param>
         /// <returns>A MailgunSentResponse object containing the details about the sent message.</returns>
         Task<MailgunSentResponse> SendMessageAsync(MailgunMessage message);
+
+        /// <summary>
+        /// Updates a webhook for the domain.
+        /// </summary>
+        /// <param name="domain">The domain to update the webhook for.</param>
+        /// <param name="webhook">The new webhook configuration</param>
+        /// <returns>The updated MailgunWebhook object.</returns>
+        Task<MailgunWebhook> UpdateWebhookAsync(string domain, MailgunWebhook webhook);
 
         /// <summary>
         /// Validates an email address.

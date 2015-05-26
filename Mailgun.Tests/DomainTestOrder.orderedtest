@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<OrderedTest name="OrderedTest1" storage="c:\users\tbenfield\workspace\github.com\standpoint-technologies\mailgun.net\mailgun.tests\orderedtest1.orderedtest" id="8c991613-ebd8-4c26-90a0-e56f7a885379" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <TestLinks>
+    <TestLink id="2538c41f-4602-efad-386c-a79f0637112f" name="TestAddDomain" storage="bin\debug\mailgun.tests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <TestLink id="155bceeb-935b-3832-7f0f-bab4e8c7031e" name="TestDeleteDomain" storage="bin\debug\mailgun.tests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  </TestLinks>
+</OrderedTest>

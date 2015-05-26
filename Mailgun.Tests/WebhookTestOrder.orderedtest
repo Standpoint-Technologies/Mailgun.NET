@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<OrderedTest name="webhooktestorder" storage="c:\users\tbenfield\workspace\github.com\standpoint-technologies\mailgun.net\mailgun.tests\webhooktestorder.orderedtest" id="23cabe25-8ecb-4d51-96df-1ef31b5b862a" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <TestLinks>
+    <TestLink id="89ffb6a5-d9ff-cb07-0f05-319bf2a45d0a" name="TestAddWebhook" storage="bin\debug\mailgun.tests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <TestLink id="0f03d650-6eed-33b5-359f-7fa4223b9fc4" name="TestUpdateWebhook" storage="bin\debug\mailgun.tests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <TestLink id="f081eac8-f2ef-ece5-f65f-29f00de18f5a" name="TestDeleteWebhook" storage="bin\debug\mailgun.tests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  </TestLinks>
+</OrderedTest>

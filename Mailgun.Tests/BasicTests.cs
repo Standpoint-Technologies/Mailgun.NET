@@ -50,9 +50,31 @@ namespace Mailgun.Tests
         }
 
         [TestMethod]
+        public async Task TestAddWebhook()
+        {
+            var webhook = new MailgunWebhook()
+            {
+                Type = MailgunWebhookType.Open,
+                Url = "http://www.example.com/webhook-add"
+            };
+
+            var newWebhook = await _client.AddWebhookAsync(_domain, webhook);
+            Assert.IsNotNull(newWebhook);
+            Assert.IsNotNull(newWebhook.Url);
+            Assert.AreEqual(newWebhook.Url, webhook.Url);
+            Assert.AreEqual(newWebhook.Type, webhook.Type);
+        }
+
+        [TestMethod]
         public async Task TestDeleteDomain()
         {
             await _client.DeleteDomainAsync(_testSubDomain);
+        }
+
+        [TestMethod]
+        public async Task TestDeleteWebhook()
+        {
+            await _client.DeleteWebhookAsync(_domain, MailgunWebhookType.Open);
         }
 
         [TestMethod]
@@ -75,16 +97,6 @@ namespace Mailgun.Tests
         }
 
         [TestMethod]
-        public async Task TestValidateAddress()
-        {
-            var validation = await _client.ValidateAddressAsync(_testRecipient);
-            Assert.IsTrue(validation.IsValid);
-            Assert.AreEqual(_testRecipient, validation.Address);
-            Assert.AreEqual(_testRecipient.Substring(_testRecipient.IndexOf('@') + 1), validation.Parts.Domain);
-            Assert.AreEqual(_testRecipient.Substring(0, _testRecipient.IndexOf('@')), validation.Parts.LocalPart);
-        }
-
-        [TestMethod]
         public async Task TestParseAddresses()
         {
             var validation = await _client.ParseAddressesAsync(new string[] { _testRecipient, _testDomain });
@@ -92,6 +104,32 @@ namespace Mailgun.Tests
             Assert.AreEqual(1, validation.Unparseable.Count);
             Assert.AreEqual(_testRecipient, validation.Parsed.First());
             Assert.AreEqual(_testDomain, validation.Unparseable.First());
+        }
+
+        [TestMethod]
+        public async Task TestUpdateWebhook()
+        {
+            var webhook = new MailgunWebhook()
+            {
+                Type = MailgunWebhookType.Open,
+                Url = "http://www.example.com/webhook-update"
+            };
+
+            var newWebhook = await _client.UpdateWebhookAsync(_domain, webhook);
+            Assert.IsNotNull(newWebhook);
+            Assert.IsNotNull(newWebhook.Url);
+            Assert.AreEqual(newWebhook.Url, webhook.Url);
+            Assert.AreEqual(newWebhook.Type, webhook.Type);
+        }
+
+        [TestMethod]
+        public async Task TestValidateAddress()
+        {
+            var validation = await _client.ValidateAddressAsync(_testRecipient);
+            Assert.IsTrue(validation.IsValid);
+            Assert.AreEqual(_testRecipient, validation.Address);
+            Assert.AreEqual(_testRecipient.Substring(_testRecipient.IndexOf('@') + 1), validation.Parts.Domain);
+            Assert.AreEqual(_testRecipient.Substring(0, _testRecipient.IndexOf('@')), validation.Parts.LocalPart);
         }
     }
 }

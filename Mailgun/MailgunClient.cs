@@ -11,6 +11,7 @@ using Mailgun.Exceptions;
 using Mailgun.Internal;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
 namespace Mailgun
@@ -72,6 +73,39 @@ namespace Mailgun
             }
         }
 
+        public async Task<MailgunWebhook> AddWebhookAsync(string domain, MailgunWebhook webhook)
+        {
+            if (String.IsNullOrEmpty(domain))
+            {
+                throw new ArgumentException("domain must have a value", "domain");
+            }
+
+            if (webhook == null)
+            {
+                throw new ArgumentException("webhook must have a value", "webhook");
+            }
+
+            using (var client = createHttpClient())
+            {
+                var v = webhook.ToKeyValuePair();
+
+                var content = new FormUrlEncodedContent(v);
+                using (var response = await client.PostAsync("domains/" + HttpUtility.UrlEncode(domain) + "/webhooks", content))
+                {
+                    var statusException = await checkStatusCode(response);
+                    if (statusException != null)
+                    {
+                        throw statusException;
+                    }
+
+                    var responseBody = await response.Content.ReadAsStringAsync();
+                    var parsed = JsonConvert.DeserializeObject<MailgunWebhookWrapper>(responseBody);
+                    parsed.Webhook.Type = webhook.Type;
+                    return parsed.Webhook;
+                }
+            }
+        }
+
         public async Task DeleteDomainAsync(string domain)
         {
             if (String.IsNullOrEmpty(domain))
@@ -82,6 +116,28 @@ namespace Mailgun
             using (var client = createHttpClient())
             {
                 using (var response = await client.DeleteAsync("domains/" + HttpUtility.UrlEncode(domain)))
+                {
+                    var statusException = await checkStatusCode(response);
+                    if (statusException != null)
+                    {
+                        throw statusException;
+                    }
+
+                    await response.Content.ReadAsStringAsync();
+                }
+            }
+        }
+
+        public async Task DeleteWebhookAsync(string domain, MailgunWebhookType webhookType)
+        {
+            if (String.IsNullOrEmpty(domain))
+            {
+                throw new ArgumentException("Domain must have a value", domain);
+            }
+
+            using (var client = createHttpClient())
+            {
+                using (var response = await client.DeleteAsync("domains/" + HttpUtility.UrlEncode(domain) + "/webhooks/" + Utilities.GetEnumStringValue(webhookType)))
                 {
                     var statusException = await checkStatusCode(response);
                     if (statusException != null)
@@ -158,6 +214,55 @@ namespace Mailgun
             }
         }
 
+        public async Task<IEnumerable<MailgunWebhook>> GetWebhooksAsync(string domain)
+        {
+            if (String.IsNullOrEmpty(domain))
+            {
+                throw new ArgumentException("domain must have a value", "domain");
+            }
+            
+            using (var client = createHttpClient())
+            {
+                using (var response = await client.GetAsync("domains/" + HttpUtility.UrlEncode(domain) + "/webhooks"))
+                {
+                    var statusException = await checkStatusCode(response);
+                    if (statusException != null)
+                    {
+                        throw statusException;
+                    }
+
+                    var responseBody = await response.Content.ReadAsStringAsync();
+                    var parsed = JsonConvert.DeserializeObject<MailgunWebhookCollection>(responseBody);
+                    return parsed.ReconfiguredWebhooks;
+                }
+            }
+        }
+
+        public async Task<MailgunWebhook> GetWebhookAsync(string domain, MailgunWebhookType webhookType)
+        {
+            if (String.IsNullOrEmpty(domain))
+            {
+                throw new ArgumentException("domain must have a value", "domain");
+            }
+
+            using (var client = createHttpClient())
+            {
+                using (var response = await client.GetAsync("domains/" + HttpUtility.UrlEncode(domain) + "/webhooks/" + Utilities.GetEnumStringValue(webhookType)))
+                {
+                    var statusException = await checkStatusCode(response);
+                    if (statusException != null)
+                    {
+                        throw statusException;
+                    }
+
+                    var responseBody = await response.Content.ReadAsStringAsync();
+                    var parsed = JsonConvert.DeserializeObject<MailgunWebhookWrapper>(responseBody, _jsonSettings);
+                    parsed.Webhook.Type = webhookType;
+                    return parsed.Webhook;
+                }
+            }
+        }
+
         public async Task<MailgunAddressParseResponse> ParseAddressesAsync(IEnumerable<string> addresses, bool syntaxOnly = true)
         {
             if (addresses.Any(address => address.Length > 512))
@@ -229,6 +334,39 @@ namespace Mailgun
                         var responseBody = await response.Content.ReadAsStringAsync();
                         return JsonConvert.DeserializeObject<MailgunSentResponse>(responseBody, _jsonSettings);
                     }
+                }
+            }
+        }
+
+        public async Task<MailgunWebhook> UpdateWebhookAsync(string domain, MailgunWebhook webhook)
+        {
+            if (String.IsNullOrEmpty(domain))
+            {
+                throw new ArgumentException("domain must have a value", "domain");
+            }
+
+            if (webhook == null)
+            {
+                throw new ArgumentException("webhook must have a value", "webhook");
+            }
+
+            using (var client = createHttpClient())
+            {
+                var v = webhook.ToKeyValuePair();
+
+                var content = new FormUrlEncodedContent(v);
+                using (var response = await client.PutAsync("domains/" + HttpUtility.UrlEncode(domain) + "/webhooks/" + Utilities.GetEnumStringValue(webhook.Type), content))
+                {
+                    var statusException = await checkStatusCode(response);
+                    if (statusException != null)
+                    {
+                        throw statusException;
+                    }
+
+                    var responseBody = await response.Content.ReadAsStringAsync();
+                    var parsed = JsonConvert.DeserializeObject<MailgunWebhookWrapper>(responseBody);
+                    parsed.Webhook.Type = webhook.Type;
+                    return parsed.Webhook;
                 }
             }
         }
