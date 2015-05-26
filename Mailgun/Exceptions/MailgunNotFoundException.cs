@@ -2,7 +2,7 @@
 
 namespace Mailgun.Exceptions
 {
-    class MailgunNotFoundException : Exception
+    public class MailgunNotFoundException : Exception
     {
         public Uri Resource { get; private set; }
 
