@@ -15,6 +15,12 @@ build:
   publish_nuget: true
   verbosity: minimal
 test: off
+deploy:
+- provider: NuGet
+  server: 
+  api_key:
+    secure: 9HqRJVhPCInEINstvg/0+WGF7izgnOXRsHkeK40Q8uHFYetmuKks5dZMAQ27xUO1
+  artifact: /.*\.nupkg/
 notifications:
 - provider: Email
   to:
