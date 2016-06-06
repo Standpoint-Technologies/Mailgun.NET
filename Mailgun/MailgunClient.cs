@@ -11,7 +11,6 @@ using Mailgun.Exceptions;
 using Mailgun.Internal;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
 namespace Mailgun
@@ -38,11 +37,11 @@ namespace Mailgun
         }
 
 
-        public void Dispose()
+        public virtual void Dispose()
         {
         }
 
-        public async Task<MailgunDomainDetails> AddDomainAsync(MailgunDomain domain)
+        public virtual async Task<MailgunDomainDetails> AddDomainAsync(MailgunDomain domain)
         {
             if (domain == null)
             {
@@ -73,7 +72,7 @@ namespace Mailgun
             }
         }
 
-        public async Task<MailgunWebhook> AddWebhookAsync(string domain, MailgunWebhook webhook)
+        public virtual async Task<MailgunWebhook> AddWebhookAsync(string domain, MailgunWebhook webhook)
         {
             if (String.IsNullOrEmpty(domain))
             {
@@ -106,7 +105,7 @@ namespace Mailgun
             }
         }
 
-        public async Task DeleteDomainAsync(string domain)
+        public virtual async Task DeleteDomainAsync(string domain)
         {
             if (String.IsNullOrEmpty(domain))
             {
@@ -128,7 +127,7 @@ namespace Mailgun
             }
         }
 
-        public async Task DeleteWebhookAsync(string domain, MailgunWebhookType webhookType)
+        public virtual async Task DeleteWebhookAsync(string domain, MailgunWebhookType webhookType)
         {
             if (String.IsNullOrEmpty(domain))
             {
@@ -150,7 +149,7 @@ namespace Mailgun
             }
         }
 
-        public async Task<MailgunDomainDetails> GetDomainAsync(string domain)
+        public virtual async Task<MailgunDomainDetails> GetDomainAsync(string domain)
         {
             if (String.IsNullOrEmpty(domain))
             {
@@ -173,7 +172,7 @@ namespace Mailgun
             }
         }
 
-        public async Task<IEnumerable<MailgunDomain>> GetDomainsAsync(int? limit = null, int? skip = null)
+        public virtual async Task<IEnumerable<MailgunDomain>> GetDomainsAsync(int? limit = null, int? skip = null)
         {
             if (limit.HasValue && limit.Value <= 0)
             {
@@ -214,7 +213,7 @@ namespace Mailgun
             }
         }
 
-        public async Task<IEnumerable<MailgunWebhook>> GetWebhooksAsync(string domain)
+        public virtual async Task<IEnumerable<MailgunWebhook>> GetWebhooksAsync(string domain)
         {
             if (String.IsNullOrEmpty(domain))
             {
@@ -238,7 +237,7 @@ namespace Mailgun
             }
         }
 
-        public async Task<MailgunWebhook> GetWebhookAsync(string domain, MailgunWebhookType webhookType)
+        public virtual async Task<MailgunWebhook> GetWebhookAsync(string domain, MailgunWebhookType webhookType)
         {
             if (String.IsNullOrEmpty(domain))
             {
@@ -263,7 +262,7 @@ namespace Mailgun
             }
         }
 
-        public async Task<MailgunAddressParseResponse> ParseAddressesAsync(IEnumerable<string> addresses, bool syntaxOnly = true)
+        public virtual async Task<MailgunAddressParseResponse> ParseAddressesAsync(IEnumerable<string> addresses, bool syntaxOnly = true)
         {
             if (addresses.Any(address => address.Length > 512))
             {
@@ -292,7 +291,7 @@ namespace Mailgun
             }
         }
 
-        public async Task<MailgunSentResponse> SendMessageAsync(MailgunMessage message)
+        public virtual async Task<MailgunSentResponse> SendMessageAsync(MailgunMessage message)
         {
             if (message == null)
             {
@@ -338,7 +337,7 @@ namespace Mailgun
             }
         }
 
-        public async Task<MailgunWebhook> UpdateWebhookAsync(string domain, MailgunWebhook webhook)
+        public virtual async Task<MailgunWebhook> UpdateWebhookAsync(string domain, MailgunWebhook webhook)
         {
             if (String.IsNullOrEmpty(domain))
             {
@@ -371,7 +370,7 @@ namespace Mailgun
             }
         }
 
-        public async Task<MailgunAddressValidationResponse> ValidateAddressAsync(string address)
+        public virtual async Task<MailgunAddressValidationResponse> ValidateAddressAsync(string address)
         {
             if (String.IsNullOrEmpty(address))
             {
