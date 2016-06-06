@@ -95,7 +95,7 @@
     <Compile Include="WebhookEvents\WebhookEventBase.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Mailgun.NET.nuspec" />
+    <None Include="Mailgun.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
